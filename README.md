@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Bajaj Finserv Health - SRM Quiz Task
 
 This repository contains the solution for the Bajaj Finserv Health JVM Qualifier assignment.
@@ -44,3 +45,6 @@ You can run the task directly via Maven command.
 - **Aggregation phase**: We compute total scores dynamically per user in a `HashMap`. 
 - **Sorting Phase**: Maps don't hold order, so the results are transposed into an `ArrayList` and sorted in descending order based on `totalScore`.
 - **Submission Phase**: `Jackson` is leveraged for serialization, turning the in-memory array/objects into standard json structure. The final artifact is published to `/quiz/submit`.
+=======
+# Quiz-Leaderboard-System
+>>>>>>> 4c5a351d970ef465ce76ff9bd8534249f6566ed0
