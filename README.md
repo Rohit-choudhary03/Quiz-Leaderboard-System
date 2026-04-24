@@ -1,50 +1,144 @@
-<<<<<<< HEAD
-# Bajaj Finserv Health - SRM Quiz Task
+# 🏆 Quiz Leaderboard System
 
-This repository contains the solution for the Bajaj Finserv Health JVM Qualifier assignment.
+## 📌 Problem Overview
 
-## 1. Problem Statement
-The goal of this assignment is to simulate a real-world backend integration problem. We need to build an application that:
-- Polls a validator API exactly 10 times to fetch events (scores of participants across rounds).
-- Maintains a mandatory 5-second delay between continuous requests.
-- Deduplicates the events using `(roundId + participant)`.
-- Aggregates the results to compute the final total score per participant.
-- Generates a leaderboard ranked by the `totalScore` of users.
-- Submits the final leaderboard payload to the `POST /quiz/submit` endpoint exactly once.
+This project simulates a real-world backend integration scenario where data is fetched from an external API, processed, and transformed into a final leaderboard.
 
-## 2. Requirements & Setup
-- **Java**: JDK 11 or higher (Tested with Java 17).
-- **Maven**: To build the project and manage dependencies.
+The challenge focuses on handling **duplicate API responses**, ensuring **data consistency**, and building a reliable aggregation pipeline.
 
-## 3. How to Run
+---
 
-You can run the task directly via Maven command.
+## 🎯 Objective
 
-1. Open a terminal in the root directory of this project where `pom.xml` is located.
-2. If you need to change your `regNo` (default is `2024CS101`), you can pass it as a program argument or modify `com.bajaj.quiz.QuizTask.java`.
-3. Execute the standard Maven process using the `exec:java` plugin:
-   ```bash
-   # On Windows:
-   .\mvnw.cmd clean compile exec:java
+The application performs the following:
 
-   # On Mac/Linux:
-   ./mvnw clean compile exec:java
-   ```
-   **OR** if you wish to pass a specific `regNo`:
-   ```bash
-   # On Windows:
-   .\mvnw.cmd clean compile exec:java -Dexec.args="YOUR_REG_NO"
+* Polls a validator API **exactly 10 times**
+* Maintains a **5-second delay** between each request
+* Deduplicates events using `(roundId + participant)`
+* Aggregates total scores per participant
+* Generates a leaderboard sorted by `totalScore`
+* Submits the final result **only once**
 
-   # On Mac/Linux:
-   ./mvnw clean compile exec:java -Dexec.args="YOUR_REG_NO"
-   ```
+---
 
-## 4. How the Code Works
-- **Polling Phase**: The `main` method triggers a `for` loop `0` up to `9`. Within the loop, a standard `java.net.http.HttpClient` performs a GET request to the quiz API to fetch real-time batch events.
-- **Handling Duplicates**: In distributed systems, records can duplicate. The deduplication handles this organically by employing a Java `HashSet` holding combinations of `roundId_participant`. If the current iteration encounters an existing key, the specific score increment is bypassed, preserving accuracy.
-- **Aggregation phase**: We compute total scores dynamically per user in a `HashMap`. 
-- **Sorting Phase**: Maps don't hold order, so the results are transposed into an `ArrayList` and sorted in descending order based on `totalScore`.
-- **Submission Phase**: `Jackson` is leveraged for serialization, turning the in-memory array/objects into standard json structure. The final artifact is published to `/quiz/submit`.
-=======
-# Quiz-Leaderboard-System
->>>>>>> 4c5a351d970ef465ce76ff9bd8534249f6566ed0
+*
+
+---
+
+## 🚀 How to Run
+
+### ▶️ Default Execution
+
+```bash
+# Windows
+.\mvnw.cmd clean compile exec:java
+
+# Mac/Linux
+./mvnw clean compile exec:java
+```
+
+### ▶️ Run with Custom Registration Number
+
+```bash
+# Windows
+.\mvnw.cmd clean compile exec:java -Dexec.args="YOUR_REG_NO"
+
+# Mac/Linux
+./mvnw clean compile exec:java -Dexec.args="YOUR_REG_NO"
+```
+
+---
+
+## 🧠 How It Works
+
+### 🔹 1. Polling Phase
+
+* API is called **10 times (poll = 0 to 9)**
+* A **5-second delay** ensures compliance with API constraints
+
+---
+
+### 🔹 2. Deduplication Logic
+
+To prevent double counting, a `HashSet` is used:
+
+```java
+String key = roundId + "_" + participant;
+```
+
+* If key exists → duplicate → ignored
+* Else → processed
+
+---
+
+### 🔹 3. Aggregation
+
+A `HashMap` is used to accumulate scores:
+
+```java
+Map<String, Integer> scores;
+```
+
+---
+
+### 🔹 4. Leaderboard Generation
+
+* Convert map → list
+* Sort in descending order of scores
+
+---
+
+### 🔹 5. Submission
+
+* Final leaderboard is converted to JSON using **Jackson**
+* Submitted to `/quiz/submit` endpoint
+
+---
+
+## 📊 Final Output
+
+| Participant | Total Score |
+| ----------- | ----------- |
+| Bob         | 295         |
+| Alice       | 280         |
+| Charlie     | 260         |
+
+**Total Score = 835**
+
+---
+
+## ⚠️ Key Challenge Solved
+
+### Handling Duplicate API Data
+
+Example:
+
+* Poll 1 → Alice +10
+* Poll 3 → Alice +10 (duplicate)
+
+✔ Counted once
+❌ Duplicate ignored
+
+---
+
+## 🧪 Features
+
+* Reliable API polling
+* Idempotent data processing
+* Duplicate-safe aggregation
+* Clean leaderboard generation
+* Structured logging
+
+---
+
+## 📌 Notes
+
+* Designed to handle real-world distributed system issues
+* Ensures **data consistency** and **correctness**
+* Submission is performed **only once** to maintain integrity
+
+---
+
+## 👨‍💻 Author
+
+**Rohit Choudhary**
