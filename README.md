@@ -23,11 +23,19 @@ You can run the task directly via Maven command.
 2. If you need to change your `regNo` (default is `2024CS101`), you can pass it as a program argument or modify `com.bajaj.quiz.QuizTask.java`.
 3. Execute the standard Maven process using the `exec:java` plugin:
    ```bash
-   mvn clean compile exec:java
+   # On Windows:
+   .\mvnw.cmd clean compile exec:java
+
+   # On Mac/Linux:
+   ./mvnw clean compile exec:java
    ```
    **OR** if you wish to pass a specific `regNo`:
    ```bash
-   mvn clean compile exec:java -Dexec.args="YOUR_REG_NO"
+   # On Windows:
+   .\mvnw.cmd clean compile exec:java -Dexec.args="YOUR_REG_NO"
+
+   # On Mac/Linux:
+   ./mvnw clean compile exec:java -Dexec.args="YOUR_REG_NO"
    ```
 
 ## 4. How the Code Works

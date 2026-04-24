@@ -13,8 +13,9 @@ import java.time.Duration;
 import java.util.*;
 
 public class QuizTask {
-    // If you have a different Registration Number, change it here or pass it as a command line argument
-    private static final String DEFAULT_REG_NO = "2024CS101"; 
+    // IMPORTANT: When you are ready for final submission, change this to your ACTUAL registration number.
+    // For testing, append _TEST so you do not use up your limited submission attempts on the server.
+    private static final String DEFAULT_REG_NO = "2024CS101_TEST"; 
     private static final String BASE_URL = "https://devapigw.vidalhealthtpa.com/srm-quiz-task";
     
     public static void main(String[] args) {
@@ -98,18 +99,30 @@ public class QuizTask {
             System.out.println("\nSubmission Payload:");
             System.out.println(payloadString);
 
-            // Submit leaderboard
-            HttpRequest submitRequest = HttpRequest.newBuilder()
-                    .uri(URI.create(BASE_URL + "/quiz/submit"))
-                    .header("Content-Type", "application/json")
-                    .POST(HttpRequest.BodyPublishers.ofString(payloadString))
-                    .build();
-
-            System.out.println("\nSubmitting to validation server...");
-            HttpResponse<String> submitResponse = client.send(submitRequest, HttpResponse.BodyHandlers.ofString());
+            // =========================================================================
+            // WARNING: DO NOT SUBMIT MULTIPLE TIMES FOR THE SAME REG_NO
+            // The validation server tracks attempt counts. Final submit should only be done ONCE.
+            // =========================================================================
             
-            System.out.println("Submit Response Code: " + submitResponse.statusCode());
-            System.out.println("Submit Response Body: " + submitResponse.body());
+            boolean isDryRun = true; // CHANGE THIS TO false WHEN YOU ARE READY FOR FINAL EXACT SUBMIT
+
+            if (isDryRun) {
+                System.out.println("\n[DRY RUN MODE] - Submission bypassed to avoid exhausting your single attempt.");
+                System.out.println("Change `isDryRun = false` and `DEFAULT_REG_NO` to your actual ID before your final run.");
+            } else {
+                // Submit leaderboard
+                HttpRequest submitRequest = HttpRequest.newBuilder()
+                        .uri(URI.create(BASE_URL + "/quiz/submit"))
+                        .header("Content-Type", "application/json")
+                        .POST(HttpRequest.BodyPublishers.ofString(payloadString))
+                        .build();
+
+                System.out.println("\nSubmitting to validation server...");
+                HttpResponse<String> submitResponse = client.send(submitRequest, HttpResponse.BodyHandlers.ofString());
+                
+                System.out.println("Submit Response Code: " + submitResponse.statusCode());
+                System.out.println("Submit Response Body: " + submitResponse.body());
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
