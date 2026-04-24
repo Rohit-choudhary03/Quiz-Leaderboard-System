@@ -15,7 +15,7 @@ import java.util.*;
 public class QuizTask {
     // IMPORTANT: When you are ready for final submission, change this to your ACTUAL registration number.
     // For testing, append _TEST so you do not use up your limited submission attempts on the server.
-    private static final String DEFAULT_REG_NO = "2024CS101_TEST"; 
+    private static final String DEFAULT_REG_NO = "2024CS101"; 
     private static final String BASE_URL = "https://devapigw.vidalhealthtpa.com/srm-quiz-task";
     
     public static void main(String[] args) {
@@ -84,12 +84,17 @@ public class QuizTask {
             leaderboardList.sort((a, b) -> b.getValue().compareTo(a.getValue()));
 
             ArrayNode leaderboardNode = mapper.createArrayNode();
+            int totalScoreAcrossAllUsers = 0;
+
             for (Map.Entry<String, Integer> entry : leaderboardList) {
                 ObjectNode participantNode = mapper.createObjectNode();
                 participantNode.put("participant", entry.getKey());
                 participantNode.put("totalScore", entry.getValue());
                 leaderboardNode.add(participantNode);
+                totalScoreAcrossAllUsers += entry.getValue();
             }
+
+            System.out.println("\nComputed Total Score across all users: " + totalScoreAcrossAllUsers);
 
             ObjectNode submitPayload = mapper.createObjectNode();
             submitPayload.put("regNo", regNo);
@@ -104,7 +109,7 @@ public class QuizTask {
             // The validation server tracks attempt counts. Final submit should only be done ONCE.
             // =========================================================================
             
-            boolean isDryRun = true; // CHANGE THIS TO false WHEN YOU ARE READY FOR FINAL EXACT SUBMIT
+            boolean isDryRun = false; // CHANGE THIS TO false WHEN YOU ARE READY FOR FINAL EXACT SUBMIT
 
             if (isDryRun) {
                 System.out.println("\n[DRY RUN MODE] - Submission bypassed to avoid exhausting your single attempt.");
